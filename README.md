@@ -1,39 +1,25 @@
 # Nvidium World Cache
 
-Mod experimental para Fabric que guarda terreno recebido pelo cliente e o reapresenta ao pipeline normal do Sodium e do Nvidium. No modo World Gen, também pode gerar terreno em mundos locais e preparar essas chunks para aparecerem no Nvidium.
+**Persistent terrain for Sodium and Nvidium.** Nvidium World Cache saves terrain received by the client and restores it through Minecraft's regular chunk rendering pipeline. Its optional World Gen mode generates real chunks in local worlds and prepares them for rendering.
 
-## Situação
+> Experimental alpha · Fabric · Minecraft 26.2
 
-- Alpha atual: **0.1.0-alpha.12 para Minecraft 26.2**.
-- O World Cache preserva terreno que o cliente já recebeu.
-- O World Gen gera chunks reais em mundo local; não é compatível com geração em servidor remoto.
-- O terreno armazenado é visual. Ele não mantém entidades nem simula chunks descarregadas.
-- É um projeto independente e experimental, sem vínculo oficial com Nvidium, Sodium, Modrinth ou CurseForge.
+## Features
 
-Faça backup dos seus mundos antes de testar versões alpha. O mod grava o mundo gerado normal do Minecraft e guarda snapshots visuais em um banco separado.
+- **World Cache** — keeps a visual record of terrain the client has received, so it can be restored later.
+- **World Gen** — generates chunks in singleplayer worlds and feeds them into the normal client rendering pipeline.
+- **Render-friendly processing** — restoration and generation are budgeted to help keep gameplay responsive.
 
-## Instalação
+Cached terrain is visual data. It does not keep entities active or simulate unloaded chunks. World Gen currently works in local worlds; remote-server generation is not supported. Alpha builds may change and can contain bugs.
 
-Instale em um perfil Fabric com Minecraft **26.2**, Java **25**, Fabric Loader **0.19.3+**, Fabric API **0.153.0+26.2**, Sodium **0.9.2+mc26.2** e Nvidium **0.4.4-beta6-26.2**. O Nvidium exige hardware compatível.
+## Compatibility
 
-As builds alpha são experimentais. Mod Menu e Cloth Config são opcionais e habilitam a interface de configuração. Sem eles, use `config/nvidium-world-cache.json`.
+This project targets Minecraft **26.2** on Fabric and works with Sodium and Nvidium. Nvidium requires compatible hardware. Compatibility with other Minecraft versions is not implied.
 
-## Compilar
+## Project
 
-Com JDK 25 instalado:
+Nvidium World Cache is an independent community project and is not affiliated with the Nvidium, Sodium, Modrinth, or CurseForge teams.
 
-```powershell
-./gradlew.bat build
-```
+## License
 
-O JAR instalável fica em `build/libs/`. Os testes e builds automáticos rodam em ambiente isolado pelo GitHub Actions.
-
-## Desenvolvimento e releases
-
-As notas e os artefatos das alphas são preservados em `releases/alpha-N`. Para as próximas versões, a automação publica no GitHub, Modrinth e CurseForge quando uma release do GitHub for marcada como publicada e as credenciais estiverem configuradas como secrets.
-
-Veja [como preparar e publicar uma versão](docs/PUBLISHING.md) e as [notas da alpha 12](releases/alpha-12/alpha12.md).
-
-## Licença
-
-A licença do código ainda será definida pelo mantenedor. Até essa definição, não presuma permissão para reutilizar ou redistribuir o código-fonte.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
