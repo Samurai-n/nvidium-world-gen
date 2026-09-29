@@ -1,0 +1,14 @@
+.gradle/
+.gradle-user/
+build/
+run/
+upstream/
+.idea/
+*.log
+docs/bytecode/
+docs/PROJECT_STATE.md
+docs/archive/
+docs/validation/
+AGENTS.md
+releases/**/instance/
+releases/**/*config-before-install.json

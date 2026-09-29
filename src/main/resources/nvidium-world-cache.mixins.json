@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "dev.nvidiumcache.fabric.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["OptionsMixin", "BackgroundGenerationMixin", "BackgroundMeshingMixin", "ClientChunkCacheMixin", "ClientLevelMixin", "ClientPacketListenerMixin", "LevelChunkMixin", "LightEngineMixin", "LevelLightEngineMixin", "BiomeManagerAccessor", "NvidiumMetricsMixin", "ServerChunkCacheAccessor", "ConfigTooltipMixin"],
+  "injectors": { "defaultRequire": 1 }
+}

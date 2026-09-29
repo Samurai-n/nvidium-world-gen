@@ -1,0 +1,22 @@
+# Pesquisa de motores de geração — 2026-09-29
+
+## Critério visual
+Nvidium não renderiza uma chunk apenas porque ela existe no save do servidor. A seção precisa entrar no mundo **cliente** como LevelChunk, ser marcada carregada para Sodium e passar pelo agendador de malhas. Nesta base, `CacheSession.install` cria um `VisualChunk`, registra `addedLoadedChunks`, marca seções sujas, chama `onChunkLoaded` e `ChunkTrackerHolder.onChunkStatusAdded`. `WorldGenGameTest` confirma malha enviada após restauração; não há transferência direta de buffers da GPU.
+
+Fluxo atual: servidor integrado pede `ChunkStatus.FULL` → `ChunkSnapshotCodec.freeze` no servidor → `CacheWorker.saveDeferred` grava SQLite → o leitor espacial do cache descobre a nova entrada → prepara/restaura `VisualChunk` no cliente → Sodium/Nvidium constroem a malha. Uma chunk gerada por outro mod não passa por esse fluxo se não for observada/capturada pelo World Cache; o save vanilla por si só não sinaliza ao cliente para mostrá-la fora da distância normal.
+
+## Referências reais
+- [Chunky GenerationTask](https://github.com/pop4959/Chunky/blob/master/common/src/main/java/org/popcraft/chunky/GenerationTask.java): pula chunks já geradas (configurável), usa `getChunkAtAsync`, `CompletableFuture` e semáforo de até50 tarefas por padrão. Seu objetivo é pré-gerar **save vanilla**, não entregar terreno distante ao pipeline Sodium/Nvidium. A [API pública](https://github.com/pop4959/Chunky/wiki/Developer-API) gerencia tarefas/eventos; conclusão de tarefa não fornece, por si, o snapshot de cada chunk para renderização.
+- [C2ME](https://github.com/RelativityMC/C2ME-fabric): melhora a execução do próprio pipeline de chunks do Minecraft com múltiplos núcleos, inclusive geração e I/O. É acelerador de backend, não fonte de chunks visuais. Há release oficial para [Minecraft 26.2](https://github.com/RelativityMC/C2ME-fabric/releases). Deve ser testado em perfil descartável com a combinação Nvidium/Sodium antes de recomendá-lo como dependência.
+- [Voxy World Gen V2](https://github.com/iSeeEthan/voxy_worldgen_v2): `ChunkGenerationManager` usa semáforo de tarefas, lotes espaciais, tickets, `getChunkFutureMainThread(..., FULL, true)`, callback de conclusão e ingestão direta da `LevelChunk` em Voxy. Isso confirma que o agendador pode fornecer a chunk pronta a outro consumidor sem que ela apareça na tela. A ingestão é específica do Voxy, não do Nvidium. O repositório tem licença CUSTOM: estudar padrões, não copiar código sem conferir autorização.
+
+## Gargalo observado na alpha 8
+Log real de 15:08:57 a15:09:12: 76→134 chunks salvas em15s (~3,9/s), servidor ~50ms/tick, intervalo configurado5ticks, pedidos1–2/2. Limite teórico do agendador nesse ajuste é4 novos pedidos/s, mesmo com CPU livre. A tela mostra60/1089 e dois pedidos pendentes; isso não prova travamento. Pedidos pendentes podem aguardar dependências da geração. FPS do cliente não mede custo do servidor integrado. O raio16 representa1089 chunks FULL, com custo de geração e save além do cache.
+
+## Direção recomendada
+1. Separar interface `ChunkSource` (gerador) de `ChunkCapture` (snapshot) e `VisualCache` (restauração). Assim C2ME pode acelerar vanilla e Chunky pode preencher o save sem duplicar a implementação visual.
+2. Primeiro remover o teto fixo de 5ticks quando o servidor tem folga, substituindo por controle adaptativo com limites reais de tarefas, tempo de freeze, fila de gravação, heap e ms/tick. Medir chunks/s, latência do pedido, gravação e tempo até a primeira malha em mundo descartável; não prometer velocidade só pelo número de threads.
+3. Para motor externo, capturar a `LevelChunk` na conclusão da geração ou carregá-la pontualmente do servidor, sem mandar todas as chunks ao cliente pelo protocolo vanilla. Entregar snapshot ao cache e oferecer caminho de instalação imediata no cliente dentro dos limites de RAM/tempo; persistir em segundo plano. Evitar polling de milhares de chunks por tick.
+4. Testar C2ME + gerador atual primeiro. Testar Chunky com uma ponte explícita para snapshots como opção de pré-geração. Voxy World Gen V2 é referência de agendamento/ingestão; depender dele exigiria integração frágil e não transformaria suas LODs em malhas completas do Nvidium.
+
+Nenhuma integração externa ou ganho de desempenho foi validado na instância do usuário nesta pesquisa. Não trocar o motor sem benchmark e testes de compatibilidade.

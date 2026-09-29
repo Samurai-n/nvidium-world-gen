@@ -1,0 +1,7 @@
+# Alpha 10 — pipeline de geração e gravação em lotes
+
+O agendador separa pedidos de chunks ao servidor, cópias prontas e confirmações de gravação. Assim, uma gravação lenta não ocupa uma das vagas de geração. Os buffers são limitados a 32 MiB de snapshots, com orçamentos cooperativos de 1,5 ms para cópia e 0,75 ms para novos pedidos por tick. O número máximo configurável de pedidos simultâneos sobe para 16; os presets Estável/Rápido/Ultra escolhem 2/8/16. Configurações já salvas continuam preservadas até o usuário alterá-las.
+
+Antes de pedir uma chunk, o mod consulta em lotes de até 128 as coordenadas já persistidas no SQLite e as contabiliza como reaproveitadas. O worker grava até 8 snapshots por transação, confirmando cada um somente depois do commit. A consulta de presença é rápida e não valida o conteúdo; a leitura normal continua validando digest e removendo registros corrompidos.
+
+Validação: testes locais e cliente de testes passaram em mundo descartável (`build/alpha10-full.log`). O teste cobriu interface, persistência e restauração, 9 chunks novas no Overworld, 1 no Nether e 1 no End, e acompanhamento de teleporte/pausa/stop. Duas buscas de 9 chunks já em cache levaram aproximadamente 98 e 99 ms; não representam throughput de geração nova nem comparação com Chunky. A operação continua sujeita ao tempo de geração do servidor e ao custo de copiar, compactar e renderizar dados completos para Nvidium. Desempenho e FPS no mundo do usuário ainda precisam de validação.
