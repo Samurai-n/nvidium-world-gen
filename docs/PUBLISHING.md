@@ -1,36 +1,9 @@
-# Publicação de versões
+# Publicação
 
-## O que a automação fará
+A alpha 15 é a última alpha planejada. Ela reúne quatro JARs distintos, para Minecraft 1.21.11, 26.1.2, 26.2 e 26.3. Cada arquivo deve ser oferecido apenas para a versão indicada no nome. Os ports 1.20.1 e 1.21.1 foram cancelados para esta publicação.
 
-Ao enviar uma tag `v<versão>` que corresponda à versão no `build.gradle`, o GitHub Actions compila o projeto e executa as verificações do Gradle. Só depois de uma compilação aprovada ele cria a release e envia o JAR instalável para GitHub Releases, Modrinth e CurseForge. O JAR de código-fonte não é enviado como se fosse instalável.
+O código da 26.2 fica em `main`; os demais ports ficam nos branches `port/<versão>`. Os JARs e fontes preservados, as notas e os SHA-256 estão em `releases/alpha-15/`. O workflow da tag `v0.1.0-alpha.15` compila os quatro branches, confere os arquivos arquivados e publica uma prerelease no GitHub com os quatro JARs instaláveis. Se `MODRINTH_PROJECT_ID` e `CURSEFORGE_PROJECT_ID` estiverem definidos, também envia cada JAR às duas plataformas. Os tokens já estão nos secrets do GitHub e nunca devem entrar no repositório.
 
-As chaves de publicação ficam nas configurações privadas do repositório, nunca nos arquivos do projeto nem em mensagens.
+Para publicar nas plataformas, crie primeiro os projetos Modrinth e CurseForge e configure os IDs nas variáveis do repositório. Os tokens precisam ter permissão de criar versões. Confira nome, imagem, licença MIT, descrição, dependências e versões de Minecraft em cada página. Depois envie a tag. O workflow pode ser reexecutado após configurar os IDs, se o GitHub já tiver sido publicado.
 
-## Configuração necessária uma vez
-
-Depois de criar os projetos no Modrinth e CurseForge e o repositório no GitHub, abra **Settings → Secrets and variables → Actions** e cadastre:
-
-**Variables**
-
-- `MODRINTH_PROJECT_ID`: identificador do projeto no Modrinth.
-- `CURSEFORGE_PROJECT_ID`: identificador numérico do projeto no CurseForge.
-
-**Secrets**
-
-- `MODRINTH_TOKEN`: crie um PAT na página de tokens do Modrinth com somente a permissão **Create versions**. A automação não altera dados do projeto nem destaca versões.
-- `CURSEFORGE_TOKEN`: gere um API token na página **My API Tokens** do CurseForge.
-
-Não envie nem cole os tokens em issues, commits, arquivos, capturas de tela ou nesta conversa. Cole cada token diretamente no campo de secret correspondente do GitHub.
-
-## Como publicar uma versão nova
-
-1. Atualize a versão em `build.gradle` e escreva as notas em `releases/alpha-N/`.
-2. Faça commit e envie as alterações para o repositório.
-3. Crie e envie uma tag igual à versão no `build.gradle`, com `v` no começo. Exemplo: para `0.1.0-alpha.14+26.2`, use `v0.1.0-alpha.14+26.2` **somente após aprovar essa versão para publicação**.
-4. Acompanhe **Actions** no GitHub. Falha no build ou configuração ausente interrompe a publicação.
-
-A tag enviada é o sinal de que aquela versão está pronta para publicação pública nas três plataformas. As alphas antigas continuam arquivadas localmente em `releases/alpha-N`; a automação não republica o histórico automaticamente.
-
-## Estado da primeira publicação
-
-O repositório público já existe, e o código tem licença MIT. Os tokens das plataformas estão nos secrets do GitHub. Ainda faltam as páginas do mod e as variáveis `MODRINTH_PROJECT_ID` e `CURSEFORGE_PROJECT_ID`; o workflow atual interrompe a publicação se qualquer uma delas faltar. A logo ainda precisa estar disponível como arquivo local para entrar no JAR e nas páginas. Consulte [os critérios da primeira release](FIRST_RELEASE.md) antes de enviar a tag.
+A release é experimental. As notas em `releases/alpha-15/README.md` registram o impacto de FPS observado e o fato de que World Gen opera apenas em mundos locais. Não prometa desempenho instantâneo ou compatibilidade com versões que não foram validadas.

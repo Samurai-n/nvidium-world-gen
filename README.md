@@ -1,25 +1,27 @@
 # Nvidium World Cache
 
-**Persistent terrain for Sodium and Nvidium.** Nvidium World Cache saves terrain received by the client and restores it through Minecraft's regular chunk rendering pipeline. Its optional World Gen mode generates real chunks in local worlds and prepares them for rendering.
+**Persistent distant terrain for Sodium and Nvidium.** World Cache saves terrain received by the client and restores it through Minecraft's chunk rendering pipeline. World Gen can generate real chunks around the player in local worlds and add them to that visual cache.
 
-> Experimental alpha · Fabric · Minecraft 26.2
+> Experimental alpha for Fabric: Minecraft 1.21.11, 26.1.2, 26.2 and 26.3.
 
 ## Features
 
-- **World Cache** — keeps a visual record of terrain the client has received, so it can be restored later.
-- **World Gen** — generates chunks in singleplayer worlds and feeds them into the normal client rendering pipeline.
-- **Render-friendly processing** — restoration and generation are budgeted to help keep gameplay responsive.
+- **World Cache** preserves previously seen terrain for distant rendering.
+- **World Gen** generates real chunks in singleplayer and follows the player after travel or teleportation.
+- **Live controls** let you switch generation and cache presets while playing. Detailed controls are available in Mod Menu.
 
-Cached terrain is visual data. It does not keep entities active or simulate unloaded chunks. World Gen currently works in local worlds; remote-server generation is not supported. Alpha builds may change and can contain bugs.
+Cached terrain is visual data: unloaded chunks do not keep entities or game logic active. World Gen works only in local worlds. It uses Minecraft's normal generation pipeline, so generating a large area can reduce FPS and increase CPU, RAM, and disk usage. Performance varies by hardware, world and modpack; this alpha does not promise instant loading. C2ME is optional.
 
 ## Compatibility
 
-This project targets Minecraft **26.2** on Fabric and works with Sodium and Nvidium. Nvidium requires compatible hardware. Compatibility with other Minecraft versions is not implied.
+Choose the JAR that exactly matches your Minecraft version. Fabric API, Sodium and Nvidium are required. Nvidium also requires compatible graphics hardware. Minecraft 1.20.1 and 1.21.1 are not part of this release.
+
+The interface includes English and Brazilian Portuguese. Minecraft selects the provided language automatically; some command messages are still in Portuguese in this alpha.
 
 ## Project
 
-Nvidium World Cache is an independent community project and is not affiliated with the Nvidium, Sodium, Modrinth, or CurseForge teams.
+Nvidium World Cache is an independent community project. It is not affiliated with the Nvidium, Sodium, Modrinth or CurseForge teams.
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

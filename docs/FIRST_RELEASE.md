@@ -1,11 +1,9 @@
-# Primeira release pública — critérios
+# Primeira publicação — alpha 15
 
-**Alvo proposto:** `0.1.0-alpha.14+26.2`, marcado como **experimental**. Não usar “final” nem prometer velocidade instantânea. Manter C2ME opcional: o mod deve funcionar com e sem ele.
+Versões aprovadas para a prerelease experimental: **1.21.11, 26.1.2, 26.2 e 26.3**. Os ports 1.20.1 e 1.21.1 foram retirados desta publicação a pedido do autor. Preservar todas as alphas anteriores.
 
-1. **Fechar a alpha 14.** Decidir se a instrumentação de tempos em `WorldGenerator` fica; revisar o diff local; compilar o JAR instalável e o sources JAR; arquivar ambos e notas em `releases/alpha-14/`. Nenhum JAR da alpha 14 está instalado ou publicado neste momento.
-2. **Validar comportamento.** Testes unitários/Gradle, GameTests de cache, World Gen e interfaces em mundos descartáveis. Em sessão real, verificar restauração ao reentrar, geração perto do jogador e após teleporte, pausa/segundo plano, troca de presets sem reiniciar, FPS, RAM e crescimento do cache/disco. Registrar limites observados; não escrever nos mundos do usuário durante testes automatizados.
-3. **Preparar apresentação.** Usar a logo original em arquivo local como ícone do mod e das páginas. Selecionar uma captura real de terreno restaurado e, opcionalmente, uma demonstração curta sem aceleração. Manter o README em inglês, curto e sem tutorial de instalação. Notas da versão devem explicar World Cache, World Gen local, Minecraft 26.2, Sodium/Nvidium obrigatórios e C2ME opcional.
-4. **Preparar plataformas.** Criar as páginas do projeto no Modrinth e CurseForge; colocar os IDs nas variáveis `MODRINTH_PROJECT_ID` e `CURSEFORGE_PROJECT_ID` do GitHub. Secrets já existem. Confirmar que os requisitos exibidos nas páginas concordam com `fabric.mod.json`.
-5. **Publicar.** Fazer commit/push da versão fechada e só então enviar a tag `v0.1.0-alpha.14+26.2`. O workflow compila e publica em GitHub, Modrinth e CurseForge; acompanhar o resultado e conferir arquivos, versão, dependências e links nas três páginas. Preservar todas as alphas anteriores.
+Compilação e GameTests em mundos descartáveis passaram nas quatro versões. A 26.2 também foi testada pelo autor em jogo real. A queda material de FPS observada pelo autor e os limites do World Gen constam nas notas. JARs, fontes e hashes ficam em `releases/alpha-15/`. Não fazer testes automatizados de escrita nos mundos do usuário.
 
-**Condição para a tag:** itens 1–4 concluídos e JAR da mesma versão validado. Se algum teste revelar falha, corrigir numa versão seguinte antes de etiquetar.
+Antes da tag `v0.1.0-alpha.15`: conferir README, notas e metadados; enviar `main` e os três branches dos ports; criar as páginas do projeto no Modrinth e CurseForge e definir `MODRINTH_PROJECT_ID` e `CURSEFORGE_PROJECT_ID` no GitHub. A logo e capturas ficam a cargo do autor; uma imagem não é requisito técnico para o JAR, mas melhora as páginas.
+
+Após a tag: conferir execução do workflow, quatro JARs na release do GitHub e uma versão correta por JAR no Modrinth e CurseForge. Se alguma plataforma não estiver configurada, a publicação fica parcial e deve ser concluída depois. Não chamar alpha de versão estável.

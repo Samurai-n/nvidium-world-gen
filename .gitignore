@@ -3,6 +3,7 @@
 build/
 run/
 upstream/
+ports/
 .idea/
 *.log
 docs/bytecode/
