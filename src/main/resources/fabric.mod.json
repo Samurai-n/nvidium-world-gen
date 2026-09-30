@@ -3,7 +3,12 @@
   "id": "nvidium_world_cache",
   "version": "${version}",
   "name": "Nvidium World Cache",
-  "description": "Experimental incremental persistence for Nvidium terrain.",
+  "description": "Stores distant terrain for Nvidium and generates new chunks in singleplayer worlds.",
+  "license": "MIT",
+  "contact": {
+    "sources": "https://github.com/Samurai-n/nvidium-world-gen",
+    "issues": "https://github.com/Samurai-n/nvidium-world-gen/issues"
+  },
   "environment": "client",
   "entrypoints": { "client": ["dev.nvidiumcache.fabric.WorldCacheClient"], "modmenu": ["dev.nvidiumcache.fabric.config.ModMenuIntegration"], "sodium:config_api_user": ["dev.nvidiumcache.fabric.config.SodiumConfigIntegration"] },
   "suggests": { "modmenu": "20.x", "cloth-config": "26.2.x" },

@@ -19,7 +19,7 @@ public final class SodiumConfigGameTest implements FabricClientGameTest {
     }
     private static void check(boolean condition, String message) { if (!condition) throw new AssertionError(message); }
     @Override public void runTest(ClientGameTestContext context) {
-        if (Boolean.getBoolean("nwc.test.corpusOnly") || Boolean.getBoolean("nwc.test.worldGenOnly")) return;
+        if (Boolean.getBoolean("nwc.test.corpusOnly") || Boolean.getBoolean("nwc.test.worldGenOnly") || Boolean.getBoolean("nwc.test.speedBench")) return;
         CacheConfig original = context.computeOnClient(client -> WorldCacheClient.editableConfig());
         try {
             context.getInput().resizeWindow(854, 480);
@@ -61,7 +61,7 @@ public final class SodiumConfigGameTest implements FabricClientGameTest {
             }
             WorldCacheClient.LOGGER.info("SODIUM CONFIG SCREEN: {}", context.takeScreenshot("nwc-sodium-alpha6-pt"));
             context.runOnClient(client -> {
-                for (String key : new String[]{"enabled", "preset", "radius", "genradius", "speed", "mode"}) {
+                for (String key : new String[]{"enabled", "preset", "genpreset", "radius", "genradius", "speed", "mode"}) {
                     check(option(key) != null, "Missing option " + key);
                     check(!option(key).getTooltip().getString().startsWith("nwc.config."), "Untranslated tooltip " + key);
                 }
@@ -75,8 +75,13 @@ public final class SodiumConfigGameTest implements FabricClientGameTest {
                 check(saved.radiusChunks == 48 && saved.maxResidentChunks == original.maxResidentChunks && saved.residentMiB == original.residentMiB,
                     "Preset changed radius/memory or failed to merge edits");
                 check(saved.groupSide == 16 && saved.restoresPerTick == 64 && saved.backgroundMeshesPerFrame == 16 && saved.tickBudgetMillis == 4
-                    && saved.generationIntervalTicks == 1 && saved.generationParallelTasks == 16,
+                    && saved.generationIntervalTicks == original.generationIntervalTicks && saved.generationParallelTasks == original.generationParallelTasks,
                     "Preset was not saved correctly");
+                SodiumConfigGameTest.<CacheConfig.GenerationPreset>option("genpreset").modifyValue(CacheConfig.GenerationPreset.ULTRA);
+                ConfigManager.CONFIG.applyAllOptions();
+                saved = CacheConfig.load();
+                check(saved.generationIntervalTicks == 1 && saved.generationParallelTasks == 16,
+                    "World Gen preset was not saved correctly");
                 check(SodiumConfigGameTest.<Integer>option("speed").getValidatedValue() == 64, "Preset controls did not refresh");
                 check(SodiumConfigGameTest.<CacheConfig.Preset>option("preset").getValidatedValue() == CacheConfig.Preset.CUSTOM,
                     "Preset action did not reset for manual editing");
@@ -84,7 +89,7 @@ public final class SodiumConfigGameTest implements FabricClientGameTest {
                 ConfigManager.CONFIG.applyAllOptions();
                 saved = CacheConfig.load();
                 check(saved.restoresPerTick == 32 && saved.backgroundMeshesPerFrame == 8 && saved.groupSide == 4
-                    && saved.generationIntervalTicks == 5 && saved.generationParallelTasks == 8
+                    && saved.generationIntervalTicks == 1 && saved.generationParallelTasks == 16
                     && saved.tickBudgetMillis == 2 && saved.residentMiB == original.residentMiB, "Speed did not coordinate loading stages");
                 // Simulate saving the Cloth screen, then editing a different Sodium field.
                 CacheConfig external = WorldCacheClient.editableConfig(); external.worldNamespace = "sodium-cross-screen-test";

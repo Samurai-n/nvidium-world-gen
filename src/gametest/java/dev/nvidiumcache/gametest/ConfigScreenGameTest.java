@@ -45,7 +45,7 @@ public final class ConfigScreenGameTest implements FabricClientGameTest {
         }
     }
     @Override public void runTest(ClientGameTestContext context) {
-        if (Boolean.getBoolean("nwc.test.corpusOnly") || Boolean.getBoolean("nwc.test.worldGenOnly")) return;
+        if (Boolean.getBoolean("nwc.test.corpusOnly") || Boolean.getBoolean("nwc.test.worldGenOnly") || Boolean.getBoolean("nwc.test.speedBench")) return;
         CacheConfig original = context.computeOnClient(client -> WorldCacheClient.editableConfig());
         try {
             context.getInput().resizeWindow(854, 480);

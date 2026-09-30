@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 public final class PersistenceGameTest implements FabricClientGameTest {
     public static volatile int serverDistance;
     @Override public void runTest(ClientGameTestContext context) {
-        if (Boolean.getBoolean("nwc.test.corpusOnly") || Boolean.getBoolean("nwc.test.configUiOnly") || Boolean.getBoolean("nwc.test.worldGenOnly")) return;
+        if (Boolean.getBoolean("nwc.test.corpusOnly") || Boolean.getBoolean("nwc.test.configUiOnly") || Boolean.getBoolean("nwc.test.worldGenOnly") || Boolean.getBoolean("nwc.test.speedBench")) return;
         context.runOnClient(client -> {
             WorldCacheClient.config.mode = dev.nvidiumcache.fabric.CacheConfig.Mode.EXPLORATION;
             client.options.renderDistance().set(8); WorldCacheClient.config.debounceTicks = 5;

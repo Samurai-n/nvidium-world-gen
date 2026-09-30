@@ -26,15 +26,11 @@ Não envie nem cole os tokens em issues, commits, arquivos, capturas de tela ou 
 
 1. Atualize a versão em `build.gradle` e escreva as notas em `releases/alpha-N/`.
 2. Faça commit e envie as alterações para o repositório.
-3. Crie e envie uma tag igual à versão, com `v` no começo. Para `0.1.0-alpha.13+26.2`, a tag é `v0.1.0-alpha.13+26.2`.
+3. Crie e envie uma tag igual à versão no `build.gradle`, com `v` no começo. Exemplo: para `0.1.0-alpha.14+26.2`, use `v0.1.0-alpha.14+26.2` **somente após aprovar essa versão para publicação**.
 4. Acompanhe **Actions** no GitHub. Falha no build ou configuração ausente interrompe a publicação.
 
 A tag enviada é o sinal de que aquela versão está pronta para publicação pública nas três plataformas. As alphas antigas continuam arquivadas localmente em `releases/alpha-N`; a automação não republica o histórico automaticamente.
 
-## Antes de abrir o repositório
+## Estado da primeira publicação
 
-- Defina o nome do proprietário e do repositório no GitHub e confirme se ele será público.
-- Defina a licença do código. O projeto ainda não declara uma licença.
-- Adicione a imagem da logo como arquivo ao repositório para que ela possa ser configurada como ícone do mod e das páginas.
-- Crie os projetos do Modrinth e CurseForge para obter seus IDs e tokens.
-- Revise notas e builds alpha antes de gerar a primeira tag pública.
+O repositório público já existe, e o código tem licença MIT. Os tokens das plataformas estão nos secrets do GitHub. Ainda faltam as páginas do mod e as variáveis `MODRINTH_PROJECT_ID` e `CURSEFORGE_PROJECT_ID`; o workflow atual interrompe a publicação se qualquer uma delas faltar. A logo ainda precisa estar disponível como arquivo local para entrar no JAR e nas páginas. Consulte [os critérios da primeira release](FIRST_RELEASE.md) antes de enviar a tag.
