@@ -40,7 +40,7 @@ jobs:
         run: |
           jar="build/libs/nvidium-world-cache-0.1.0-alpha.15+${{ matrix.game }}.jar"
           test -s "$jar"
-          unzip -p "$jar" fabric.mod.json | grep -F '"minecraft": "${{ matrix.game }}"'
+          unzip -p "$jar" fabric.mod.json | python3 -c 'import json,sys; assert json.load(sys.stdin)["depends"]["minecraft"] == sys.argv[1]' "${{ matrix.game }}"
 
   github-release:
     needs: verify
