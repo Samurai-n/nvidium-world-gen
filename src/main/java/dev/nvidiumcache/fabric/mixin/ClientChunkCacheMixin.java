@@ -3,19 +3,15 @@ package dev.nvidiumcache.fabric.mixin;
 import dev.nvidiumcache.fabric.WorldCacheClient;
 import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
-import net.minecraft.world.level.levelgen.Heightmap;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
-import java.util.Map;
-import java.util.function.Consumer;
 
 @Mixin(ClientChunkCache.class)
 public abstract class ClientChunkCacheMixin {
@@ -33,7 +29,7 @@ public abstract class ClientChunkCacheMixin {
         }
     }
     @Inject(method = "replaceWithPacketData", at = @At("HEAD"))
-    private void nwc$authoritative(int x, int z, FriendlyByteBuf buffer, Map<Heightmap.Types, long[]> heights, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> entities, CallbackInfoReturnable<LevelChunk> cir) {
+    private void nwc$authoritative(int x, int z, ClientboundLevelChunkPacketData data, CallbackInfoReturnable<LevelChunk> cir) {
         var session = WorldCacheClient.get(level);
         if (session != null) session.authoritative(x, z);
     }

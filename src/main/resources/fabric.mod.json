@@ -11,14 +11,14 @@
   },
   "environment": "client",
   "entrypoints": { "client": ["dev.nvidiumcache.fabric.WorldCacheClient"], "modmenu": ["dev.nvidiumcache.fabric.config.ModMenuIntegration"], "sodium:config_api_user": ["dev.nvidiumcache.fabric.config.SodiumConfigIntegration"] },
-  "suggests": { "modmenu": "20.x", "cloth-config": "26.2.x" },
+  "suggests": { "modmenu": "21.x", "cloth-config": "26.3.x" },
   "mixins": ["nvidium-world-cache.mixins.json"],
   "depends": {
-    "fabricloader": ">=0.19.3",
-    "fabric-api": ">=0.153.0",
-    "minecraft": "26.2",
+    "fabricloader": ">=0.19.5",
+    "fabric-api": ">=0.161.0",
+    "minecraft": "26.3",
     "java": ">=25",
-    "nvidium": "0.4.4-beta6-26.2",
+    "nvidium": "0.4.4-beta7-26.3",
     "sodium": "0.9.2"
   }
 }
