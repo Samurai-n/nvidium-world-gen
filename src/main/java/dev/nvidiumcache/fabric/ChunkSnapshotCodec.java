@@ -76,7 +76,7 @@ public final class ChunkSnapshotCodec {
             if (sky != null) tag.putByteArray("sky", sky.getData().clone());
             light.add(tag);
         }
-        return new Captured(new ChunkKey(chunk.getPos().x(), chunk.getPos().z()), level.getMinSectionY(),
+        return new Captured(new ChunkKey(chunk.getPos().x, chunk.getPos().z), level.getMinSectionY(),
                 SharedConstants.getCurrentVersion().dataVersion().version(), sections, light, biomeCodec, blocks());
     }
 

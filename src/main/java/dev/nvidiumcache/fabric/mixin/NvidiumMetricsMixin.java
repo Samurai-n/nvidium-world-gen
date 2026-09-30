@@ -18,6 +18,6 @@ public abstract class NvidiumMetricsMixin {
         if (level == null) return;
         var session = WorldCacheClient.get(level);
         var packed = ((IRepackagedResult) output).getOutput();
-        if (session != null && packed != null) session.uploaded(output.section.getChunkX(), output.section.getChunkZ(), (int) packed.geometry().getLength());
+        if (session != null && packed != null) session.uploaded(output.render.getChunkX(), output.render.getChunkZ(), (int) packed.geometry().getLength());
     }
 }

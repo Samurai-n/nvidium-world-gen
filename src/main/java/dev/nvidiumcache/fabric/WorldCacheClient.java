@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HexFormat;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public final class WorldCacheClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("nvidium-world-cache");
@@ -45,8 +45,8 @@ public final class WorldCacheClient implements ClientModInitializer {
         if (level == null) return "Dimensão indisponível.";
         if (generator != null) generator.close();
         var pos = client.player.chunkPosition();
-        generator = new WorldGenerator(server, level, session, pos.x(), pos.z(), radius, config.generationIntervalTicks);
-        followPlanner = new GenerationFollowPlanner(pos.x(), pos.z(), radius);
+        generator = new WorldGenerator(server, level, session, pos.x, pos.z, radius, config.generationIntervalTicks);
+        followPlanner = new GenerationFollowPlanner(pos.x, pos.z, radius);
         return "World Gen iniciado: raio " + radius + " chunks, na dimensão atual. Use /nvidium world gen status.";
     }
     private static ClientLevel lastLevel;
@@ -107,9 +107,9 @@ public final class WorldCacheClient implements ClientModInitializer {
                     && config.mode == CacheConfig.Mode.WORLD_GEN && client.player != null && client.getSingleplayerServer() != null) {
                 if (followPlanner == null) followPlanner = new GenerationFollowPlanner(task.centerX(), task.centerZ(), task.radius());
                 var pos = client.player.chunkPosition();
-                if (followPlanner.shouldRecenter(pos.x(), pos.z(), ticks) && task.canRecenter()) {
+                if (followPlanner.shouldRecenter(pos.x, pos.z, ticks) && task.canRecenter()) {
                     LOGGER.info("Recenter World Gen from {},{} to {},{} after player movement",
-                        task.centerX(), task.centerZ(), pos.x(), pos.z());
+                        task.centerX(), task.centerZ(), pos.x, pos.z);
                     startGeneration(task.radius());
                 }
             }

@@ -67,7 +67,7 @@ public final class WorldGenerator implements AutoCloseable {
         maxParallel = settings.generationParallelTasks;
         adaptive = settings.adaptiveGeneration;
     }
-    public String status() {
+    private String statusLabel() {
         String label = switch (state) {
             case "starting" -> "iniciando";
             case "paused" -> "pausado";
@@ -82,7 +82,17 @@ public final class WorldGenerator implements AutoCloseable {
             if (server.isPaused()) label = "jogo pausado";
             else if (pacer.noRecentTick(System.nanoTime())) label = "retomando após pausa";
         }
-        return "World Gen: " + label + "; " + completedCount() + " / " + total + " processadas"
+        return label;
+    }
+    public String summaryStatus() {
+        int done = completedCount();
+        int percent = total == 0 ? 100 : (int) (100L * done / total);
+        return "World Gen: " + statusLabel() + " — " + done + " / " + total + " chunks (" + percent + "%)"
+            + "\nNovas: " + saved + " · já no cache: " + reused + " · ignoradas: " + skipped
+            + "\nDetalhes: /nvidium world gen status debug";
+    }
+    public String status() {
+        return "World Gen: " + statusLabel() + "; " + completedCount() + " / " + total + " processadas"
             + "; novas=" + saved + ", já no cache=" + reused + ", fora do limite=" + skipped
             + "; pedidos=" + pending + "/" + maxParallel + ", fila=" + queued + "; centro=" + centerX + "," + centerZ
             + "; cadência ~" + Math.round(pacer.tickMillis()) + " ms/tick; intervalo="
@@ -127,7 +137,7 @@ public final class WorldGenerator implements AutoCloseable {
         if (lookup == null || !lookup.isDone()) return;
         Set<ChunkKey> present = lookup.join();
         for (var pos : checking) {
-            if (present.contains(new ChunkKey(pos.x(), pos.z()))) reused++;
+            if (present.contains(new ChunkKey(pos.x, pos.z))) reused++;
             else ready.addLast(pos);
         }
         checking = null; lookup = null;
@@ -144,7 +154,7 @@ public final class WorldGenerator implements AutoCloseable {
             }
             if (checking.isEmpty()) { checking = null; return; }
         }
-        lookup = cache.checkCached(checking.stream().map(pos -> new ChunkKey(pos.x(), pos.z())).toList());
+        lookup = cache.checkCached(checking.stream().map(pos -> new ChunkKey(pos.x, pos.z)).toList());
         // A full I/O mailbox leaves the staged batch intact for the next tick.
     }
     private void freezeReady() {

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "dev.nvidiumcache.gametest.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "client": ["TestServerDistanceMixin"],
   "injectors": { "defaultRequire": 1 }
 }

@@ -40,11 +40,11 @@ public abstract class ClientChunkCacheMixin {
     @Inject(method = "drop", at = @At("HEAD"))
     private void nwc$captureBeforeDrop(ChunkPos pos, CallbackInfo ci) {
         var session = WorldCacheClient.get(level);
-        if (session != null) session.beforeDrop(getChunk(pos.x(), pos.z(), ChunkStatus.FULL, false));
+        if (session != null) session.beforeDrop(getChunk(pos.x, pos.z, ChunkStatus.FULL, false));
     }
     @Inject(method = "onLightUpdate", at = @At("RETURN"))
     private void nwc$lightChanged(LightLayer type, SectionPos pos, CallbackInfo ci) {
         var session = WorldCacheClient.get(level);
-        if (session != null) session.changed(pos.x(), pos.z());
+        if (session != null) session.changed(pos.getX(), pos.getZ());
     }
 }

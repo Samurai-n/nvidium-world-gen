@@ -25,8 +25,8 @@ public final class WorldGenSpeedGameTest implements FabricClientGameTest {
             world.getServer().runCommand("gamemode spectator @p");
             world.getServer().runCommand("tp @p 1280 160 1280 0 90");
             context.waitFor(client -> WorldCacheClient.get(client.level) != null, 1200);
-            context.waitFor(client -> client.player != null && client.player.chunkPosition().x() == 80
-                && client.player.chunkPosition().z() == 80, 1200);
+            context.waitFor(client -> client.player != null && client.player.chunkPosition().x == 80
+                && client.player.chunkPosition().z == 80, 1200);
             context.runOnClient(client -> WorldCacheClient.startGeneration(radius));
             long start = System.nanoTime();
             for (int sample = 0; sample < 240; sample++) {

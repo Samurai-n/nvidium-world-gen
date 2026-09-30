@@ -21,7 +21,7 @@ public final class VanillaChunkGenerationSource implements ChunkGenerationSource
         held.add(pos);
         source.addTicketWithRadius(type, pos, 0);
         try {
-            return ((ServerChunkCacheAccessor) source).nwc$requestChunk(pos.x(), pos.z(), ChunkStatus.FULL, true)
+            return ((ServerChunkCacheAccessor) source).nwc$requestChunk(pos.x, pos.z, ChunkStatus.FULL, true)
                 .thenApply(result -> {
                     if (!(result.orElse(null) instanceof LevelChunk chunk)) throw new IllegalStateException("Full chunk unavailable at " + pos);
                     return chunk;

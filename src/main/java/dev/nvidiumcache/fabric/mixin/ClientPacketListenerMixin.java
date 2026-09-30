@@ -14,6 +14,6 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleForgetLevelChunk", at = @At("RETURN"))
     private void nwc$keepVisualChunk(ClientboundForgetLevelChunkPacket packet, CallbackInfo ci) {
         var session = WorldCacheClient.get(level);
-        if (session != null) session.keepTracked(packet.pos().x(), packet.pos().z());
+        if (session != null) session.keepTracked(packet.pos().x, packet.pos().z);
     }
 }

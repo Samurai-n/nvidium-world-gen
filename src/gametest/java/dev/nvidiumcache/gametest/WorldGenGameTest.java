@@ -19,7 +19,7 @@ public final class WorldGenGameTest implements FabricClientGameTest {
         try (var world = context.worldBuilder().create()) {
             context.waitFor(client -> WorldCacheClient.get(client.level) != null, 200);
             context.runOnClient(client -> {
-                var dispatcher = net.fabricmc.fabric.api.client.command.v2.ClientCommands.getActiveDispatcher();
+                var dispatcher = net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.getActiveDispatcher();
                 var source = (net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource) client.getConnection().getSuggestionsProvider();
                 try {
                     dispatcher.execute("nvidium", source);
@@ -27,6 +27,8 @@ public final class WorldGenGameTest implements FabricClientGameTest {
                     if (!WorldCacheClient.get(client.level).paused) throw new AssertionError("Cache pause command failed");
                     dispatcher.execute("nvidium world cache resume", source);
                     dispatcher.execute("nvidium world gen start 1", source);
+                    dispatcher.execute("nvidium world gen status", source);
+                    dispatcher.execute("nvidium world gen status debug", source);
                     dispatcher.execute("nvidium world gen start 1", source);
                     dispatcher.execute("nvidium world gen pause", source);
                     if (!WorldCacheClient.generator().paused) throw new AssertionError("Generation pause command failed");

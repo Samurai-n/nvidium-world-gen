@@ -13,11 +13,11 @@ public abstract class ClientLevelMixin {
     @Inject(method = "onChunkLoaded", at = @At("RETURN"))
     private void nwc$loaded(ChunkPos pos, CallbackInfo ci) {
         var session = WorldCacheClient.get((ClientLevel) (Object) this);
-        if (session != null) session.changed(pos.x(), pos.z());
+        if (session != null) session.changed(pos.x, pos.z);
     }
     @Inject(method = "unload", at = @At("RETURN"))
     private void nwc$unloaded(LevelChunk chunk, CallbackInfo ci) {
         var session = WorldCacheClient.get((ClientLevel) (Object) this);
-        if (session != null) session.keepTracked(chunk.getPos().x(), chunk.getPos().z());
+        if (session != null) session.keepTracked(chunk.getPos().x, chunk.getPos().z);
     }
 }
