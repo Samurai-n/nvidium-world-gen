@@ -1,6 +1,7 @@
 name: Publish alpha 15
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v0.1.0-alpha.15'
@@ -33,7 +34,7 @@ jobs:
             25
           cache: gradle
       - name: Build and test
-        run: ./gradlew --no-daemon build
+        run: bash ./gradlew --no-daemon build
       - name: Check artifact metadata
         shell: bash
         run: |
@@ -58,10 +59,10 @@ jobs:
         shell: bash
         run: |
           files=(releases/alpha-15/nvidium-world-cache-0.1.0-alpha.15+{1.21.11,26.1.2,26.2,26.3}.jar)
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
+          if gh release view "v0.1.0-alpha.15" >/dev/null 2>&1; then
+            gh release upload "v0.1.0-alpha.15" "${files[@]}" --clobber
           else
-            gh release create "$GITHUB_REF_NAME" "${files[@]}" \
+            gh release create "v0.1.0-alpha.15" "${files[@]}" \
               --title 'Nvidium World Cache 0.1.0-alpha.15' \
               --notes-file releases/alpha-15/README.md --prerelease --verify-tag
           fi
