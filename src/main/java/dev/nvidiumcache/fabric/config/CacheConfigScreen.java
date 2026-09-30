@@ -63,6 +63,10 @@ public final class CacheConfigScreen {
             .setErrorSupplier(value -> value.isBlank() || value.length() > 128 ? Optional.of(text("namespace.error")) : Optional.empty())
             .setSaveConsumer(value -> draft.worldNamespace = value).build());
         var generation = builder.getOrCreateCategory(text("generation"));
+        var generationPreset = entries.startEnumSelector(text("genPreset"), CacheConfig.GenerationPreset.class, CacheConfig.GenerationPreset.CUSTOM)
+            .setEnumNameProvider(value -> text("genPreset." + value.name().toLowerCase(java.util.Locale.ROOT)))
+            .setTooltip(text("genPreset.help")).build();
+        generation.addEntry(generationPreset);
         generation.addEntry(entries.startBooleanToggle(text("generateWhilePaused"), draft.generateWhilePaused)
             .setTooltip(text("generateWhilePaused.help")).setDefaultValue(defaults.generateWhilePaused)
             .setSaveConsumer(value -> draft.generateWhilePaused = value).build());
@@ -88,7 +92,7 @@ public final class CacheConfigScreen {
         storage.addEntry(entries.startIntField(text("diskReserve"), draft.freeDiskMiB)
             .setMin(512).setMax(1048576).setDefaultValue(defaults.freeDiskMiB).setTooltip(text("diskReserve.help"))
             .setSaveConsumer(value -> draft.freeDiskMiB = value).build());
-        builder.setSavingRunnable(() -> { draft.applyPreset(preset.getValue()); WorldCacheClient.saveConfig(draft); });
+        builder.setSavingRunnable(() -> { draft.applyPreset(preset.getValue()); draft.applyGenerationPreset(generationPreset.getValue()); WorldCacheClient.saveConfig(draft); });
         Screen screen = builder.build(); SCREENS.add(screen); return screen;
     }
 }

@@ -20,9 +20,9 @@ public final class GenerationPacer {
         return Math.max(requestedTicks, Math.min(1000, (int) Math.round(requestedTicks * Math.max(1, tickMillis / 50.0))));
     }
     public boolean ready(int requestedTicks) { return ++ticks % interval(requestedTicks) == 0; }
-    public int adaptiveInterval(int requestedTicks) { return tickMillis <= 55 ? 1 : interval(requestedTicks); }
+    public int adaptiveInterval(int requestedTicks) { return interval(requestedTicks); }
     public boolean ready(int requestedTicks, boolean adaptive) {
-        return ++ticks % (adaptive ? adaptiveInterval(requestedTicks) : interval(requestedTicks)) == 0;
+        return ++ticks % (adaptive ? adaptiveInterval(requestedTicks) : requestedTicks) == 0;
     }
     public double tickMillis() { return tickMillis; }
     public boolean noRecentTick(long nowNanos) { return previousNanos != 0 && nowNanos - previousNanos > 1_000_000_000L; }

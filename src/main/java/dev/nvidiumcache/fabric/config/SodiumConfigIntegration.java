@@ -25,14 +25,16 @@ public final class SodiumConfigIntegration implements ConfigEntryPoint {
     private static final class Edits {
         private final LinkedHashMap<String, Consumer<CacheConfig>> changes = new LinkedHashMap<>();
         private CacheConfig.Preset preset = CacheConfig.Preset.CUSTOM;
+        private CacheConfig.GenerationPreset generationPreset = CacheConfig.GenerationPreset.CUSTOM;
         void save() {
-            if (changes.isEmpty() && preset == CacheConfig.Preset.CUSTOM) return;
+            if (changes.isEmpty() && preset == CacheConfig.Preset.CUSTOM && generationPreset == CacheConfig.GenerationPreset.CUSTOM) return;
             CacheConfig updated = WorldCacheClient.editableConfig();
             changes.values().forEach(change -> change.accept(updated));
             updated.maxDirtyAgeTicks = Math.max(updated.maxDirtyAgeTicks, updated.debounceTicks);
             updated.applyPreset(preset);
+            updated.applyGenerationPreset(generationPreset);
             WorldCacheClient.saveConfig(updated);
-            changes.clear(); preset = CacheConfig.Preset.CUSTOM;
+            changes.clear(); preset = CacheConfig.Preset.CUSTOM; generationPreset = CacheConfig.GenerationPreset.CUSTOM;
         }
     }
 
@@ -57,6 +59,12 @@ public final class SodiumConfigIntegration implements ConfigEntryPoint {
             .setBinding(value -> edits.preset = value, () -> CacheConfig.Preset.CUSTOM).setStorageHandler(save)
             // Sodium 0.9.2 keeps displayed values until a screen rebuild. Refresh after
             // storage has applied the preset so its four changed fields are visible now.
+            .setApplyHook(state -> ((net.caffeinemc.mods.sodium.client.config.structure.Config) state).resetAllOptionsFromBindings()));
+        page.addOption(builder.createEnumOption(id("genPreset"), CacheConfig.GenerationPreset.class)
+            .setName(text("genPreset")).setTooltip(text("genPreset.help"))
+            .setDefaultValue(CacheConfig.GenerationPreset.CUSTOM)
+            .setElementNameProvider(value -> text("genPreset." + value.name().toLowerCase(java.util.Locale.ROOT)))
+            .setBinding(value -> edits.generationPreset = value, () -> CacheConfig.GenerationPreset.CUSTOM).setStorageHandler(save)
             .setApplyHook(state -> ((net.caffeinemc.mods.sodium.client.config.structure.Config) state).resetAllOptionsFromBindings()));
         integer(builder, page, edits, save, "radius", 2, 128, defaults.radiusChunks, c -> c.radiusChunks, (c,v) -> c.radiusChunks = v);
         integer(builder, page, edits, save, "genRadius", 1, 128, defaults.generationRadius,

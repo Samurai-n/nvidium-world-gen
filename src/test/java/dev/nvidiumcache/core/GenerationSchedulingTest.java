@@ -12,7 +12,7 @@ class GenerationSchedulingTest {
         assertEquals(1, pacing.interval(1));
         for (int i = 0; i < 20; i++) assertTrue(pacing.ready(1, false));
     }
-    @Test void adaptiveModeUsesHeadroomAndRetainsManualPacing() {
+    @Test void adaptiveModeRespectsChosenMinimumAndSlowsUnderLoad() {
         var automatic = new GenerationPacer();
         var manual = new GenerationPacer();
         int fast = 0, slow = 0;
@@ -20,10 +20,18 @@ class GenerationSchedulingTest {
             if (automatic.ready(5, true)) fast++;
             if (manual.ready(5, false)) slow++;
         }
-        assertEquals(100, fast); assertEquals(20, slow);
+        assertEquals(20, fast); assertEquals(20, slow);
         long time = 10_000_000_000L;
         for (int i = 0; i < 30; i++) automatic.observe(time += 100_000_000L);
         assertTrue(automatic.adaptiveInterval(5) > 5);
+    }
+    @Test void changingPresetPaceTakesEffectWithoutResettingTheScheduler() {
+        var pacing = new GenerationPacer();
+        int stable = 0, ultra = 0;
+        for (int i = 0; i < 80; i++) if (pacing.ready(8, true)) stable++;
+        for (int i = 0; i < 80; i++) if (pacing.ready(1, true)) ultra++;
+        assertEquals(10, stable);
+        assertEquals(80, ultra);
     }
     @Test void sustainedSlowServerReducesRequestsWithoutStarvingThem() {
         var pacing = new GenerationPacer();

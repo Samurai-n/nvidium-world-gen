@@ -86,7 +86,7 @@ public final class WorldGenerator implements AutoCloseable {
             + "; novas=" + saved + ", já no cache=" + reused + ", fora do limite=" + skipped
             + "; pedidos=" + pending + "/" + maxParallel + ", fila=" + queued + "; centro=" + centerX + "," + centerZ
             + "; cadência ~" + Math.round(pacer.tickMillis()) + " ms/tick; intervalo="
-            + (adaptive ? pacer.adaptiveInterval(interval) : pacer.interval(interval)) + " ticks";
+            + (adaptive ? pacer.adaptiveInterval(interval) : interval) + " ticks";
     }
     public void tick(MinecraftServer current) {
         if (current != server || stopped || state.equals("complete")) return;

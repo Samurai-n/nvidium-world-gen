@@ -40,6 +40,7 @@ public final class CacheConfig {
         }
     }
     public enum Preset { CUSTOM, STABLE, FAST, ULTRA }
+    public enum GenerationPreset { CUSTOM, STABLE, FAST, ULTRA }
     public enum Mode { EXPLORATION, WORLD_GEN }
     public Mode mode = Mode.WORLD_GEN;
     public int generationRadius = 16;
@@ -57,15 +58,21 @@ public final class CacheConfig {
         backgroundMeshesPerFrame = Math.max(1, (speed + 3) / 4);
         tickBudgetMillis = speed <= 32 ? 2 : 4;
         groupSide = speed <= 8 ? 2 : speed <= 32 ? 4 : 16;
-        generationIntervalTicks = speed <= 8 ? 10 : speed <= 32 ? 5 : 1;
-        generationParallelTasks = speed <= 8 ? 2 : speed <= 32 ? 8 : 16;
     }
     public void applyPreset(Preset preset) {
         switch (preset) {
             case CUSTOM -> { }
-            case STABLE -> { groupSide = 2; restoresPerTick = 8; backgroundMeshesPerFrame = 4; tickBudgetMillis = 2; generationIntervalTicks = 10; generationParallelTasks = 2; }
-            case FAST -> { groupSide = 4; restoresPerTick = 32; backgroundMeshesPerFrame = 8; tickBudgetMillis = 2; generationIntervalTicks = 5; generationParallelTasks = 8; }
-            case ULTRA -> { groupSide = 16; restoresPerTick = 64; backgroundMeshesPerFrame = 16; tickBudgetMillis = 4; generationIntervalTicks = 1; generationParallelTasks = 16; }
+            case STABLE -> { groupSide = 2; restoresPerTick = 8; backgroundMeshesPerFrame = 4; tickBudgetMillis = 2; }
+            case FAST -> { groupSide = 4; restoresPerTick = 32; backgroundMeshesPerFrame = 8; tickBudgetMillis = 2; }
+            case ULTRA -> { groupSide = 16; restoresPerTick = 64; backgroundMeshesPerFrame = 16; tickBudgetMillis = 4; }
+        }
+    }
+    public void applyGenerationPreset(GenerationPreset preset) {
+        switch (preset) {
+            case CUSTOM -> { }
+            case STABLE -> { generationIntervalTicks = 8; generationParallelTasks = 2; }
+            case FAST -> { generationIntervalTicks = 2; generationParallelTasks = 8; }
+            case ULTRA -> { generationIntervalTicks = 1; generationParallelTasks = 16; }
         }
     }
     public int restoresPerTick = 32;
