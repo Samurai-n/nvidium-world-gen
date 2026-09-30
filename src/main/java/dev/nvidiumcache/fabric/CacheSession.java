@@ -280,15 +280,8 @@ public final class CacheSession implements AutoCloseable {
     }
     private void install(ChunkKey key, VisualChunk chunk) {
         resident.put(key, chunk); residentBytes += chunk.estimatedBytes;
-        var source = level.getChunkSource();
-        long packed = key.packed();
-        source.addedLoadedChunks().add(packed); source.removedLoadedChunks().remove(packed);
         for (int i = 0; i < chunk.getSections().length; i++) {
             int y = level.getSectionYFromSectionIndex(i);
-            if (chunk.getSections()[i].hasOnlyAir()) {
-                long pos = SectionPos.asLong(key.x(), y, key.z());
-                source.addedEmptySections().add(pos); source.removedEmptySections().remove(pos);
-            }
             level.setSectionDirtyWithNeighbors(key.x(), y, key.z());
         }
         level.onChunkLoaded(new ChunkPos(key.x(), key.z()));
@@ -299,15 +292,9 @@ public final class CacheSession implements AutoCloseable {
         if (old == null) return;
         meshRevision++;
         residentBytes -= old.estimatedBytes;
-        var source = level.getChunkSource();
         if (!replacement) {
-            source.removedLoadedChunks().add(key.packed()); source.addedLoadedChunks().remove(key.packed());
             for (int i = 0; i < old.getSections().length; i++) {
                 int y = level.getSectionYFromSectionIndex(i);
-                if (old.getSections()[i].hasOnlyAir()) {
-                    long pos = SectionPos.asLong(key.x(), y, key.z());
-                    source.removedEmptySections().add(pos); source.addedEmptySections().remove(pos);
-                }
                 level.setSectionDirtyWithNeighbors(key.x(), y, key.z());
             }
         }
