@@ -63,7 +63,8 @@ class StorageTest {
     @Test void interruptedTransactionKeepsLastCommittedSnapshot() throws Exception {
         Path file = temp.resolve("crash.sqlite");
         try (var store = new SnapshotStore(file)) { store.put(new ChunkKey(1, 0), payload(1)); }
-        String java = Path.of(System.getProperty("java.home"), "bin", "java.exe").toString();
+        String executable = System.getProperty("os.name").startsWith("Windows") ? "java.exe" : "java";
+        String java = Path.of(System.getProperty("java.home"), "bin", executable).toString();
         String cp = System.getProperty("test.runtime.classpath", System.getProperty("java.class.path"));
         Process child = new ProcessBuilder(java, "-cp", cp, CrashWriter.class.getName(), file.toString()).redirectErrorStream(true).start();
         assertTrue(child.waitFor(20, TimeUnit.SECONDS), "crash harness timed out");
