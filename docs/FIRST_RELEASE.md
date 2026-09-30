@@ -7,3 +7,6 @@ Compilação e GameTests em mundos descartáveis passaram nas quatro versões. A
 Antes da tag `v0.1.0-alpha.15`: conferir README, notas e metadados; enviar `main` e os três branches dos ports; criar as páginas do projeto no Modrinth e CurseForge e definir `MODRINTH_PROJECT_ID` e `CURSEFORGE_PROJECT_ID` no GitHub. A logo e capturas ficam a cargo do autor; uma imagem não é requisito técnico para o JAR, mas melhora as páginas.
 
 Após a tag: conferir execução do workflow, quatro JARs na release do GitHub e uma versão correta por JAR no Modrinth e CurseForge. Se alguma plataforma não estiver configurada, a publicação fica parcial e deve ser concluída depois. Não chamar alpha de versão estável.
+## Resultado parcial
+
+GitHub publicado: quatro builds e checagens concluídos; quatro JARs instaláveis na prerelease. Modrinth e CurseForge aguardam páginas e IDs dos projetos. A identidade visual fica a cargo do autor.
