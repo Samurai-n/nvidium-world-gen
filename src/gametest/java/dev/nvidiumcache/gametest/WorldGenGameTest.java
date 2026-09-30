@@ -27,6 +27,8 @@ public final class WorldGenGameTest implements FabricClientGameTest {
                     if (!WorldCacheClient.get(client.level).paused) throw new AssertionError("Cache pause command failed");
                     dispatcher.execute("nvidium world cache resume", source);
                     dispatcher.execute("nvidium world gen start 1", source);
+                    dispatcher.execute("nvidium world gen status", source);
+                    dispatcher.execute("nvidium world gen status debug", source);
                     dispatcher.execute("nvidium world gen start 1", source);
                     dispatcher.execute("nvidium world gen pause", source);
                     if (!WorldCacheClient.generator().paused) throw new AssertionError("Generation pause command failed");
