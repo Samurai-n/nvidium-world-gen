@@ -66,9 +66,9 @@ jobs:
               --notes-file releases/alpha-15/README.md --prerelease --verify-tag
           fi
 
-  mod-platforms:
+  modrinth:
     needs: github-release
-    if: ${{ vars.MODRINTH_PROJECT_ID != '' && vars.CURSEFORGE_PROJECT_ID != '' }}
+    if: ${{ vars.MODRINTH_PROJECT_ID != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -90,6 +90,29 @@ jobs:
           modrinth-featured: false
           modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          fail-mode: fail
+
+  curseforge:
+    needs: github-release
+    if: ${{ vars.CURSEFORGE_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        game: ['1.21.11', '26.1.2', '26.2', '26.3']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: Kir-Antipov/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        with:
+          files: releases/alpha-15/nvidium-world-cache-0.1.0-alpha.15+${{ matrix.game }}.jar
+          name: Nvidium World Cache 0.1.0-alpha.15 — Minecraft ${{ matrix.game }}
+          version: 0.1.0-alpha.15+${{ matrix.game }}
+          version-type: alpha
+          loaders: fabric
+          game-versions: ${{ matrix.game }}
+          changelog-file: releases/alpha-15/README.md
           curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           fail-mode: fail
